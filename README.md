@@ -6,7 +6,7 @@ Yanan Sun, Bing Xue, Mengjie Zhang, Gary G. Yen, “Evolving deep convolutional 
 
 @article{sun2019evolving,  
   title={Evolving deep convolutional neural networks for image classification},  
-  author={Sun, Yanan and Xue, Bing and Zhang, Mengjie and Yen, Gary G},  
+  author={youme,ousmane, Dembele Jean mari, Eugene ezin, Christtohpe Cambier},  
   journal={IEEE Transactions on Evolutionary Computation},   
   volume={24},   
   number={2},  
