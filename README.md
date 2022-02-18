@@ -1,7 +1,6 @@
 # evocnn
 Source codes for the paper of "Evolving Deep Convolutional Neural Networks for Image Classification" published by TEVC. Very much apprciate if you could cite this paper when you get help from this code.
 
-Yanan Sun, Bing Xue, Mengjie Zhang, Gary G. Yen, “Evolving deep convolutional neural networks for image classification,” IEEE Transactions on Evolutionary Computation, vol. 24, no. 2, pp. 394-407, 2020.
 
 
 @article{sun2019evolving,  
