@@ -58,7 +58,7 @@ class Evaluate:
         history_best_score = 0
         for i in range(self.pops.get_pop_size()):
             indi = self.pops.get_individual_at(i)
-            rs_mean, rs_std, num_connections, new_best = self.parse_individual(indi, self.number_of_channel, i, save_dir, history_best_score)
+            rs_mean, rs_std, num_connections, new_best = self.parse_individual(indi, self.number_of_channel, i, save_dir, history_best_score,gen_no)
             #rs_mean, rs_std, num_connections, new_best = np.random.random(), np.random.random(), np.random.random_integers(1000, 100000), -1
             indi.mean = rs_mean
             indi.std = rs_std
@@ -174,7 +174,7 @@ class Evaluate:
 
 
 
-    def parse_individual(self, indi, num_of_input_channel, indi_index, save_path, history_best_score):
+    def parse_individual(self, indi, num_of_input_channel, indi_index, save_path, history_best_score,gen_no):
         tf.reset_default_graph()
         train_data, train_label = get_data.get_train_data(self.batch_size)
         validate_data, validate_label = get_data.get_validate_data(self.batch_size)
@@ -207,6 +207,10 @@ class Evaluate:
                         mean_test_accu = np.mean(test_accuracy_list)
                         mean_test_loss = np.mean(test_loss_list)
                         print('{}, {}, indi:{}, Step:{}/{}, train_loss:{}, acc:{}, test_loss:{}, acc:{}'.format(datetime.now(), i // steps_in_each_epoch, indi_index, i, total_steps, loss_str, accuracy_str, mean_test_loss, mean_test_accu))
+                        info='{}, {}, indi:{}, Step:{}/{}, train_loss:{}, acc:{}, test_loss:{}, acc:{}'.format(datetime.now(), i // steps_in_each_epoch, indi_index, i, total_steps, loss_str, accuracy_str, mean_test_loss, mean_test_accu)
+                        list_save_path = os.getcwd() + '/spaces/save_data/gen_{:03d}/metrics.txt'.format(gen_no)
+                        utils.save_metrics(info, list_save_path)
+                        info=''
                         #print('{}, test_loss:{}, acc:{}'.format(datetime.now(), loss_str, accuracy_str))
                 #validate the last epoch
                 test_total_step = self.validate_data_length//self.batch_size
@@ -219,6 +223,10 @@ class Evaluate:
                 mean_test_accu = np.mean(test_accuracy_list)
                 mean_test_loss = np.mean(test_loss_list)
                 print('{}, test_loss:{}, acc:{}'.format(datetime.now(), mean_test_loss, mean_test_accu))
+                info2='{}, test_loss:{}, acc:{}'.format(datetime.now(), mean_test_loss, mean_test_accu)
+                list_save_path = os.getcwd() + '/spaces/save_data/gen_{:03d}/metrics.txt'.format(gen_no)
+                utils.save_metrics(info2, list_save_path)
+                info2=''
                 mean_acc = mean_test_accu
                 if mean_acc > history_best_score:
                     save_mean_acc = tf.Variable(-1, dtype=tf.float32, name='save_mean')

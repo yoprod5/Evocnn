@@ -1,7 +1,7 @@
 from population import Population
 from evaluate import Evaluate
 import numpy
-import tensorflow.examples.tutorials.mnist as input_data
+#import tensorflow.examples.tutorials.mnist as input_data
 import tensorflow as tf
 import collections
 from utils import *
@@ -9,7 +9,7 @@ import copy
 
 
 class Evolve_CNN:
-    def __init__(self, m_prob, m_eta, x_prob, x_eta, population_size, train_data, train_label, validate_data, validate_label, number_of_channel, epochs, batch_size, train_data_length, validate_data_length, eta):
+    def __init__(self, m_prob, m_eta, x_prob, x_eta, population_size, train_data, train_label, validate_data, validate_label, number_of_channel, epochs, batch_size, train_data_length, validate_data_length, eta,length):
         self.m_prob = m_prob
         self.m_eta = m_eta
         self.x_prob = x_prob
@@ -25,16 +25,22 @@ class Evolve_CNN:
         self.batch_size = batch_size
         self.train_data_length = train_data_length
         self.validate_data_length = validate_data_length
+        self.Length=length
+        
 
-    def initialize_popualtion(self):
-        print("initializing population with number {}...".format(self.population_size))
+    def initialize_population(self,gen_no):
+        #print("initializing population with number {}...".format(self.Length))
         self.pops = Population(self.population_size)
+        self.pops.Pop_initialize(self.Length)
+        print(self.pops)
+        #self.pops.set_populations(self.gen_ind_spaces(self.Length))
         # all the initialized population should be saved
-        save_populations(gen_no=-1, pops=self.pops)
-    def evaluate_fitness(self, gen_no):
+        save_populations(gen_no=gen_no, pops=self.pops)
+    def evaluate_fitness(self,gen_no):
         print("evaluate fintesss")
+        self.initialize_population(gen_no)
         evaluate = Evaluate(self.pops, self.train_data, self.train_label, self.validate_data, self.validate_label, self.number_of_channel, self.epochs, self.batch_size, self.train_data_length, self.validate_data_length)
-        evaluate.parse_population(gen_no)
+        evaluate.parse_population_spaces(gen_no)
 #         # all theinitialized population should be saved
         save_populations(gen_no=gen_no, pops=self.pops)
         print(self.pops)

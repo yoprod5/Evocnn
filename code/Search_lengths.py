@@ -24,7 +24,6 @@ class Search_Length :
         self.batch_size = batch_size
         self.train_data_length = train_data_length
         self.validate_data_length = validate_data_length
-        
         ###########
         self.Length=24
         self.Space=[0,24]
@@ -36,13 +35,10 @@ class Search_Length :
         #print("initializing population with number {}...".format(self.Length))
         self.pops = Population(0)
         self.pops.Pop_initialize_spaces(self.Length)
+        print(self.pops)
         #self.pops.set_populations(self.gen_ind_spaces(self.Length))
         # all the initialized population should be saved
         save_populations(gen_no=-1, pops=self.pops)
-
-
-
-
     
 
     def Select_space(self, gen_no):
@@ -68,15 +64,25 @@ class Search_Length :
         np.random.shuffle(self.pops.pops)
 
     def espace_selecion(self):  
-        for i in range(self.pops.get_pop_size()):
+        i=0
+        notfind=1
+        while (i < self.pops.get_pop_size()) and (notfind) :
             ind1=self.pops.get_individual_at(i)
-            for j in range(self.pops.get_pop_size()):
-                ind2=self.pops.get_individual_at(j)
-                winner=self.selection(ind1,ind2)
+            j=i+1
+            while j <(self.pops.get_pop_size()):
+                  ind2=self.pops.get_individual_at(j)
+                  winner=self.selection(ind1,ind2)
+                  if winner!=ind1 :
+                     i=j
+                     break
+                  j+=1
+            if winner==ind1 :
+               notfind=0;
+                    
         save_populations(gen_no=-1, pops=self.pops)
         np.random.shuffle(self.pops.pops)
 
-        return  winner.get_layer_size()
+        return  winner.get_length()
 
     def selection(self, ind1, ind2):
         mean_threshold = 0.05
@@ -105,11 +111,12 @@ class Search_Length :
         '''
         Len =[]
         #N= self.Length  
-        self.initialize_popualtion() 
-        E=Evaluate(self.pops,self.train_data ,self.train_label,self.validate_data,self.validate_label,self.number_of_channel,self.epochs,self.batch_size,self.train_data_length,self.validate_data_length)
+        self.initialize_popualtion()
+        E= Evaluate(self.pops,self.train_data ,self.train_label,self.validate_data,self.validate_label,
+self.number_of_channel,self.epochs,self.batch_size,self.train_data_length,self.validate_data_length) 
         E.parse_population_spaces(-1)
         Len=self.espace_selecion()
-        print("L'espace optimal trouver est {} -2 et +2 ".format(len))
+        print("L'espace optimal trouver est {} ".format(Len))
         return Len
         
 
