@@ -58,6 +58,9 @@ class Evolve_CNN:
     def recombinate(self, gen_no):
         print("mutation and crossover...")
         offspring_list = []
+        save_dir = os.getcwd() + '/spaces/save_data/gen_{:03d}/offsprings_data'.format(gen_no)
+        tf.gfile.MakeDirs(save_dir)
+        indi_path = os.getcwd() + '/spaces/save_data/gen_{:03d}/offsprings_data/gen_{}.txt'.format(gen_no,gen_no)
         for _ in range(int(self.pops.get_pop_size()/2)):
             p1 = self.tournament_selection()
             p2 = self.tournament_selection()
@@ -68,18 +71,30 @@ class Evolve_CNN:
             offset2.mutation()
             offspring_list.append(offset1)
             offspring_list.append(offset2)
+            save_append_individual(str(offset1),indi_path)
+            save_append_individual(str(offset2),indi_path)
         offspring_pops = Population(0)
         offspring_pops.set_populations(offspring_list)
-        save_offspring(gen_no, offspring_pops)
+        
+        data = {'gen_no':gen_no, 'pops':offspring_pops, 'create_time':strftime("%Y-%m-%d %H:%M:%S", gmtime())}
+        path = os.getcwd() + '/spaces/save_data/gen_{:03d}/offsprings_data/gen_{}.dat'.format(gen_no,gen_no)
+        with open(path, 'wb') as file_handler:
+             pickle.dump(data, file_handler)
+        #data = {'gen_no':gen_no, 'pops':offspring_pops, 'create_time':strftime("%Y-%m-%d %H:%M:%S", gmtime())}
+        #path = os.getcwd() + '/spaces/save_data/gen_{:03d}/offsprings_data/gen_{}.txt'.format(gen_no,gen_no)
+        #with open(path, 'wb') as file_handler2:
+         #    pickle.dump(data, file_handler2)
+
+        #save_offspring(gen_no, offspring_pops)
         #evaluate these individuals
-        evaluate = Evaluate(self.pops, self.train_data, self.train_label, self.validate_data, self.validate_label, self.number_of_channel, self.epochs, self.batch_size, self.train_data_length, self.validate_data_length)
-        evaluate.parse_population(gen_no)
+        evaluate2 = Evaluate(offspring_pops, self.train_data, self.train_label, self.validate_data, self.validate_label, self.number_of_channel, self.epochs, self.batch_size, self.train_data_length, self.validate_data_length)
+        evaluate2.parse_population_offspring(gen_no)
 #         #save
         self.pops.pops.extend(offspring_pops.pops)
         save_populations(gen_no=gen_no, pops=self.pops)
 
     def environmental_selection(self, gen_no):
-        assert(self.pops.get_pop_size() == 2*self.population_size)
+        #assert(self.pops.get_pop_size() == 2*self.population_size)
         elitsam = 0.2
         e_count = int(np.floor(self.population_size*elitsam/2)*2)
         indi_list = self.pops.pops
