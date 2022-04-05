@@ -78,33 +78,33 @@ def get_mnist_validate_data():
 def get_train_data(batch_size):
 
     num_classes = 10
-    (t_image, t_label), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
-    assert t_image.shape == (60000, 28, 28)
-    assert x_test.shape == (10000, 28, 28)
-    assert t_label.shape == (60000,)
-    assert y_test.shape == (10000,)
-    #(t_image, t_label), (x_test, y_test) = tf.keras.datasets.cifar100.load_data()
-   # assert t_image.shape == (50000, 32, 32, 3)
-    #assert x_test.shape == (10000, 32, 32, 3)
-    #assert t_label.shape == (50000, 1)
-    #assert y_test.shape == (10000, 1)
+    #(t_image, t_label), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+    #assert t_image.shape == (60000, 28, 28)
+    #assert x_test.shape == (10000, 28, 28)
+    #assert t_label.shape == (60000,)
+    #assert y_test.shape == (10000,)
+    (t_image, t_label), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
+    assert t_image.shape == (50000, 32, 32, 3)
+    assert x_test.shape == (10000, 32, 32, 3)
+    assert t_label.shape == (50000, 1)
+    assert y_test.shape == (10000, 1)
 
     #train_image = tf.cast(t_image, tf.float32)
-    t_label = tf.cast(t_label, tf.int32)
+    #t_label = tf.cast(t_label, tf.int32)
     #single_image, single_label  = tf.train.slice_input_producer([train_image, train_label], shuffle=True)
     #single_image = tf.image.per_image_standardization(single_image)
     t_image = t_image.astype("float32") / 255
     #x_test = x_test.astype("float32") / 255
 # Make sure images have shape (28, 28, 1)
-    t_image = np.expand_dims(t_image, -1)
-    x_test = np.expand_dims(x_test, -1)
+    #t_image = np.expand_dims(t_image, -1)
+    #x_test = np.expand_dims(x_test, -1)
     print("x_train shape:", t_image.shape)
     print("x_label shape:", t_label.shape)
 
     print(t_image.shape[0], "train samples")
     print(x_test.shape[0], "test samples")
-    #t_label = np.squeeze(t_label.astype(np.int32))
-    #print("x_label shape:",len(t_label.shape))
+    t_label = np.squeeze(t_label.astype(np.int32))
+    print("x_label shape:",len(t_label.shape))
 
 # convert class vectors to binary class matrices
     #t_label = tf.keras.utils.to_categorical(t_label, num_classes)
@@ -128,31 +128,31 @@ def get_train_data(batch_size):
 def get_validate_data(batch_size):
 
     num_classes=10
-    (x_train, y_train), (t_image, t_label) = tf.keras.datasets.fashion_mnist.load_data()
-    assert x_train.shape == (60000, 28, 28)
-    assert t_image.shape == (10000, 28, 28)
-    assert y_train.shape == (60000,)
-    assert t_label.shape == (10000,)
+    #(x_train, y_train), (t_image, t_label) = tf.keras.datasets.mnist.load_data()
+    #assert x_train.shape == (60000, 28, 28)
+    #assert t_image.shape == (10000, 28, 28)
+    #assert y_train.shape == (60000,)
+    #assert t_label.shape == (10000,)
     
-    #(x_train, y_train), (t_image, t_label) = tf.keras.datasets.cifar100.load_data()
-    #assert x_train.shape == (50000, 32, 32, 3)
-    #assert t_image.shape == (10000, 32, 32, 3)
-    #assert y_train.shape == (50000, 1)
-    #assert t_label.shape == (10000, 1)
+    (x_train, y_train), (t_image, t_label) = tf.keras.datasets.cifar10.load_data()
+    assert x_train.shape == (50000, 32, 32, 3)
+    assert t_image.shape == (10000, 32, 32, 3)
+    assert y_train.shape == (50000, 1)
+    assert t_label.shape == (10000, 1)
     #t_image = tf.cast(t_image, tf.float32)
-    t_label = tf.cast(t_label, tf.int32)
+    #t_label = tf.cast(t_label, tf.int32)
     #single_image, single_label  = tf.train.slice_input_producer([validate_image, validate_label], shuffle=False)
     #single_image = tf.image.per_image_standardization(single_image)
     t_image = t_image.astype("float32") / 255
     #x_train = x_train.astype("float32") / 255
 # Make sure images have shape (28, 28, 1)
-    t_image = np.expand_dims(t_image, -1)
-    x_train = np.expand_dims(x_train, -1)
+    #t_image = np.expand_dims(t_image, -1)
+    #x_train = np.expand_dims(x_train, -1)
     #t_label=np.reshape(t_label,[10000])
     print("x_train shape:", t_image.shape)
     print("x_label shape:",len(t_label.shape))
 
-    #t_label = np.squeeze(t_label.astype(np.int32))
+    t_label = np.squeeze(t_label.astype(np.int32))
 
     #t_label=t_label.reshape([50000])
 
