@@ -32,13 +32,13 @@ class Evaluate:
     '''
     Parse the chromosome in the population to the information which can be directly employed by TensorFLow
     '''
-    def parse_population(self, gen_no):
+    def parse_population_offspring(self, gen_no):
         save_dir = os.getcwd() + '/save_data/gen_{:03d}'.format(gen_no)
         tf.gfile.MakeDirs(save_dir)
         history_best_score = 0
         for i in range(self.pops.get_pop_size()):
             indi = self.pops.get_individual_at(i)
-            rs_mean, rs_std, num_connections, new_best = self.parse_individual(indi, self.number_of_channel, i, save_dir, history_best_score)
+            rs_mean, rs_std, num_connections, new_best = self.parse_individual(indi, self.number_of_channel, i, save_dir, history_best_score,gen_no)
             #rs_mean, rs_std, num_connections, new_best = np.random.random(), np.random.random(), np.random.random_integers(1000, 100000), -1
             indi.mean = rs_mean
             indi.std = rs_std
@@ -205,12 +205,13 @@ class Evaluate:
 
         is_training, train_op, accuracy, cross_entropy, num_connections, merge_summary = self.build_graph(indi_index, num_of_input_channel, indi, train_data, train_label, validate_data, validate_label)
         device_type = 'GPU'
-        devices = tf.config.experimental.list_physical_devices(device_type)
-        devices_names = [d.name.split("e:")[1] for d in devices]
-        strategy = tf.distribute.MirroredStrategy(devices=devices_names[:2])
-        print("device names, ", devices_names)
-        with strategy.scope():
-             with tf.Session() as sess:	
+        #devices = tf.config.experimental.list_physical_devices(device_type)
+        #evices_names = [d.name.split("e:")[1] for d in devices]
+        #strategy = tf.distribute.MirroredStrategy(devices=devices_names[:2])
+        #print("device names, ", devices_names)
+        #config = tf.ConfigProto(device_count = {'GPU': 0}
+    
+        with tf.Session() as sess:	
                   sess.run(tf.global_variables_initializer())
                   steps_in_each_epoch = (self.train_data_length//self.batch_size)
                   total_steps = int(self.epochs*steps_in_each_epoch)
